@@ -1,0 +1,72 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:Karawang@localhost:3306/pilketos"
+}
+
+model Candidates {
+  id        Int      @id @default(autoincrement())
+  nama      String   @db.VarChar(100)
+  kelas     Kelas
+  jurusan   Jurusan
+  visi      String?  @db.Text
+  misi      String?  @db.Text
+  file      String   @db.VarChar(100)
+  url       String   @db.VarChar(100)
+  voter     Voters[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tb_candidate")
+}
+
+model Voters {
+  id           Int         @id @default(autoincrement())
+  uuid         String      @unique @default(uuid()) @db.VarChar(100)
+  nis          Int         @unique @map("nis")
+  nama         String      @db.VarChar(100)
+  password     String      @db.VarChar(100)
+  kelas        Kelas
+  jurusan      Jurusan
+  Candidates   Candidates? @relation(fields: [candidatesId], references: [id])
+  candidatesId Int?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@map("tb_voter")
+}
+
+model Admins {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique @default(uuid()) @db.VarChar(100)
+  nama      String   @unique @db.VarChar(100)
+  password  String   @db.VarChar(100)
+  posisi    Posisi
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tb_admin")
+}
+
+enum Kelas {
+  X
+  XI
+  XII
+}
+
+enum Jurusan {
+  TKR
+  TMI
+  RPL
+  Kuliner
+}
+
+enum Posisi {
+  Developer
+  Koordinator
+  Pengawas
+}
