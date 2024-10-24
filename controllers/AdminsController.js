@@ -1,5 +1,4 @@
 import { prisma } from "../lib/Client.js";
-import bcrypt from "bcrypt";
 export const getAdmins = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
@@ -203,21 +202,19 @@ export const createAdmin = async (req, res) => {
       },
     });
     if (isAlready) return res.status(400).json({ msg: "Data Sudah Ada!" });
-    bcrypt.hash(password, 10, async (error, hash) => {
-      if (error) return res.status(400).json({ msg: error.message });
-      try {
-        const response = await prisma.admins.create({
-          data: {
-            nama,
-            password: hash,
-            posisi,
-          },
-        });
-        return res.status(201).json(response);
-      } catch (error) {
-        return res.status(400).json({ msg: error.message });
-      }
-    });
+    if (error) return res.status(400).json({ msg: error.message });
+    try {
+      const response = await prisma.admins.create({
+        data: {
+          nama,
+          password,
+          posisi,
+        },
+      });
+      return res.status(201).json(response);
+    } catch (error) {
+      return res.status(400).json({ msg: error.message });
+    }
   } catch (error) {
     return res.status(400).json({ msg: error.message });
   }

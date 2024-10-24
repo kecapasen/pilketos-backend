@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = "mysql://root:Karawang@localhost:3306/pilketos"
+  provider  = "postgresql"
+  url       = "postgresql://postgres.eqnmzglqhjtfqwwksnnl:Karawang123!@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+  directUrl = "postgresql://postgres.eqnmzglqhjtfqwwksnnl:Karawang123!@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
 }
 
 model Candidates {

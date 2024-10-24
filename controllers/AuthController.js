@@ -1,5 +1,4 @@
 import { prisma } from "../lib/Client.js";
-import bcrypt from "bcrypt";
 export const isAdmin = async (req, res) => {
   if (req.session.adminId) {
     try {
@@ -57,7 +56,7 @@ export const loginAdmin = async (req, res) => {
       },
     });
     if (!admin) return res.status(404).json({ msg: "Admin Tidak Ditemukan!" });
-    const match = await bcrypt.compare(req.body.password, admin.password);
+    const match = req.body.password === admin.password;
     if (!match) return res.status(400).json({ msg: "Password Salah!" });
     req.session.adminId = admin.uuid;
     return res
@@ -81,7 +80,7 @@ export const loginVoter = async (req, res) => {
     if (!voter) return res.status(404).json({ msg: "Siswa Tidak Ditemukan!" });
     if (voter.candidatesId !== null)
       return res.status(403).json({ msg: "Anda Sudah Memilih!" });
-    const match = voter.password === req.body.password;
+    const match = req.body.password === voter.password;
     if (!match) return res.status(400).json({ msg: "Password Salah!" });
     req.session.voterId = voter.uuid;
     return res.status(200).json({
